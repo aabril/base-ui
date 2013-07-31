@@ -42,6 +42,20 @@ module.exports = function(grunt) {
             }
         },
 
+	jade: {
+            compile: {
+                options: {
+                    pretty: true
+                },
+
+                files: {
+                    "dist/index.html": ["src/jade/index.jade"]
+                }
+
+            }
+        },
+
+
         copy: {
             fonts: {
                 files: [{ expand: true, cwd: "src/less/fonts", src: ["*"], dest: "dist/fonts/" }]
@@ -92,8 +106,19 @@ module.exports = function(grunt) {
 
         watch: {
             src: {
-                files: ["src/less/*.less", "src/js/*.js"],
+                files: ["src/less/*.less", "src/js/*.js", "src/jade/*.jade"],
                 tasks: ["build"]
+            }
+        },
+
+    	connect: {
+	    server: {
+		options: {
+		   port: 9001,
+		   keepalive: true,
+		   base: "dist/",
+		   tasks: ['build'],
+		}
             }
         }
 
@@ -101,15 +126,17 @@ module.exports = function(grunt) {
 
     // Load grunt tasks from NPM packages
     grunt.loadNpmTasks("grunt-contrib-less");
+    grunt.loadNpmTasks("grunt-contrib-jade");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-contrib-connect");
 
     // Register grunt tasks
-    grunt.registerTask("build", ["less", "concat", "uglify", "copy"]);
+    grunt.registerTask("build", ["less", "jade", "concat", "uglify", "copy"]);
     grunt.registerTask("default", ["build"]);
     grunt.registerTask("jshint", ["jshint"]);
 
